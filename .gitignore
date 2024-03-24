@@ -1,0 +1,4 @@
+#忽略掉dist文件夹
+dist/
+#
+node_modules/
