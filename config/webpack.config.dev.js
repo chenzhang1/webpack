@@ -1,9 +1,11 @@
 const path = require("path")
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 module.exports = {
-    entry: "./src/main.js",
+    entry: "./src/main.js", //相对路径
     //输出
     output: {
-        path: path.resolve(__dirname, "dist"),//绝对路径
+        path: undefined,//绝对路径.开发模式没有输出可以不指定路径
         //入口文件打包输出文件名字
         filename: "static/js/main.js",
         clean: true,
@@ -50,19 +52,48 @@ module.exports = {
             },
             {
                 test: /\.jpg/,
-                type: 'asset/resource',
+                type: 'asset',
                 parser: {
                     dataUrlCondition: {
                         /* 小于10kb的文件会被转为base64 */
                         maxSize: 10 * 1024
                     }
                 },
-                generator:{
-                    filename:"static/images/[hash:10][ext]",
+                generator: {
+                    filename: "static/images/[hash:10][ext]",
                 }
-            }
+            },
+            {
+                test: /\.(ttf||woff||woff2||mp3||mp4||avi)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: "static/media/[hash:10][ext]",
+                }
+            },
+            {
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    /*   options: {
+                        presets: ['@babel/preset-env'],
+                      }, */
+                },
+            },
         ]
     },
-    plugins: [],
+    plugins: [new ESLintPlugin({
+        //检测有哪些文件需要检查
+        context: path.resolve(__dirname, '../src'),
+    }), new HtmlWebpackPlugin({
+        //模板:将模板文件复制到打包目录中 1.结构和原来一致,2.可以自动引入打包的资源
+        template: path.resolve(__dirname, "../public/index.html"),
+    })],
+    //开发服务器
+    devServer: {
+        host: "localhost",
+        port: "3000",
+        open: true,
+    },
     mode: 'development'
 }

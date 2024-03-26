@@ -1,4 +1,5 @@
 .box{
+    display: flex;
     background-image: url("../images/haimian.jpg");
     width: 100px;
     height: 100px;
