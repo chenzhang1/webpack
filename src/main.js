@@ -11,3 +11,7 @@ var result=count(2,1)
 console.log(result)
 console.log(count(3,1));
 console.log(sum(1,2,3,4,5,6))
+if(module.hot){
+    module.hot.accept("./js/count")
+    module.hot.accept("./js/sum")
+}
